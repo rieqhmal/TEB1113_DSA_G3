@@ -4,6 +4,6 @@
 
 | Date       | Lab | Tasks                         |
 |------------|-----|-------------------------------|
-| 30/5/2025  | 1   | - [Array](./24003469_Rieqhmal Mukhreez_L1.cpp)      |
+| 30/5/2025  | 1   | - [Array](./24003469_Rieqhmal_Mukhreez_L1.cpp)  |
 | 06/6/2025  | 2   | - [Easy](./24003469_Rieqhmal_L2_Easy.cpp) <br> - [Medium](./24003469_Rieqhmal_L2_Medium.cpp) <br> - [Hard](./24003469_Rieqhmal_L2_Hard.cpp) |
-| 13/6/2025  | 1   | - [Linked list](./L3)
+| 13/6/2025  | 3   | - [Linked list](./L3)
