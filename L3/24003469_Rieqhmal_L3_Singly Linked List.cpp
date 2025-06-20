@@ -1,64 +1,138 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
-struct Node {
+class Node
+{
+public:
     string name;
-    Node* next_pointer; // Pointer to the next Node
+    Node *next_ptr;
 
-    // Constructor to initialize Node
-    Node(string n) : name(n), next_pointer(nullptr) {}
+    Node(string name, Node *next_ptr = nullptr)
+    { // Constructor with default nullptr
+        this->name = name;
+        this->next_ptr = next_ptr;
+    }
 };
 
-class Linkedlist {
-    Node* head; // Pointer to the head of the list
+class LinkedList
+{
+private:
+    Node *head;
+    Node *tail;
 
 public:
-    Linkedlist() : head(nullptr) {} // Constructor to initialize head
+    LinkedList(Node *head = nullptr)
+    { // Constructor takes Node* and initializes tail
+        this->head = head;
+        this->tail = head;
+        if (head)
+            head->next_ptr = nullptr;
+    }
 
-    void insert_node(Node* node) {
-        if (head == nullptr) {
-            head = node; // If the list is empty, set head to the new node
-        } else {
-            Node* currNode = head;
-            while (currNode->next_pointer != nullptr) {
-                currNode = currNode->next_pointer; // Traverse to the end of the list
-            }
-            currNode->next_pointer = node; // Link the new node
+    void add_element(Node *node)
+    {
+        if (!node)
+            return; // Check for null pointer
+
+        node->next_ptr = nullptr; // Set new node's next to nullptr
+
+        if (!head)
+        { // If list is empty
+            head = node;
+            tail = node;
+        }
+        else
+        {
+            tail->next_ptr = node; // Link current tail to new node
+            tail = node; // Update tail to new node
+            tail->next_ptr = head; //Cycling the linked list
         }
     }
 
-    void display_list() {
-        Node* currNode = head;
-        while (currNode != nullptr) {
-            cout << currNode->name << " "; // Print the name of the current node
-            currNode = currNode->next_pointer; // Move to the next node
+    void display_list()
+    {
+        Node *current = head;
+        if (!current)
+        {
+            cout << "List is empty" << endl;
+            return;
         }
-        cout << endl; // New line after displaying the list
+        while (current != nullptr)
+        {
+            cout << current->name << " -> ";
+            current = current->next_ptr;
+        }
+        cout << "nullptr" << endl;
     }
 
-    // You can implement delete_node if needed
+    void delete_by_value(string val)
+    {
+        if (!head)
+            return; // Empty list
+
+        // Special case: deleting head
+        if (head->name == val)
+        {
+            Node *temp = head;
+            head = head->next_ptr;
+            delete temp;
+            if (!head)
+                tail = nullptr; // Update tail if list becomes empty
+            return;
+        }
+
+        Node *current = head;
+        while (current->next_ptr && current->next_ptr->name != val)
+        {
+            current = current->next_ptr;
+        }
+
+        if (current->next_ptr)
+        { // If value found
+            Node *temp = current->next_ptr;
+            current->next_ptr = temp->next_ptr;
+            if (temp == tail)
+                tail = current; // Update tail if deleting last node
+            delete temp;
+        }
+    }
+
+    // Getter for head to allow memory cleanup in main
+    Node *get_head() const
+    {
+        return head;
+    }
 };
 
-int main() {
-    // Create nodes
-    Node* node1 = new Node("Ali");
-    Node* node2 = new Node("Alice");
-    Node* node3 = new Node("Ahmed");
+int main()
+{
+    // Create nodes dynamically
+    Node *node1 = new Node("Ali");
+    Node *node2 = new Node("Ahmed");
+    Node *node3 = new Node("Alice");
 
-    Linkedlist std_names;
+    // Create linked list and add nodes
+    LinkedList linkedlst(node1);
+    linkedlst.add_element(node2);
+    linkedlst.add_element(node3);
 
-    std_names.insert_node(node1);
-    std_names.insert_node(node2);
-    std_names.insert_node(node3);
+    // Display the list
+    linkedlst.display_list();
 
-    std_names.display_list(); // Display the list
+    // Example of deletion
+    linkedlst.delete_by_value("Ahmed");
+    cout << "After deleting Ahmed: ";
+    linkedlst.display_list();
 
-    // Clean up memory (optional, but recommended)
-    delete node1;
-    delete node2;
-    delete node3;
+    // Clean up memory
+    Node *current = linkedlst.get_head(); // Use getter instead of direct access
+    while (current)
+    {
+        Node *temp = current;
+        current = current->next_ptr;
+        delete temp;
+    }
 
     return 0;
 }
