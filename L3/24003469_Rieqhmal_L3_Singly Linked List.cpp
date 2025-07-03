@@ -2,137 +2,94 @@
 #include <string>
 using namespace std;
 
-class Node
-{
+class Node {
 public:
     string name;
-    Node *next_ptr;
+    Node* next_ptr;
 
-    Node(string name, Node *next_ptr = nullptr)
-    { // Constructor with default nullptr
+    Node(string name) {
         this->name = name;
-        this->next_ptr = next_ptr;
+        this->next_ptr = nullptr;
     }
 };
 
-class LinkedList
-{
-private:
-    Node *head;
-    Node *tail;
-
+class LinkedList {
 public:
-    LinkedList(Node *head = nullptr)
-    { // Constructor takes Node* and initializes tail
-        this->head = head;
-        this->tail = head;
-        if (head)
-            head->next_ptr = nullptr;
+    Node* head;
+    Node* tail;
+
+    LinkedList() {
+        head = nullptr;
+        tail = nullptr;
     }
 
-    void add_element(Node *node)
-    {
-        if (!node)
-            return; // Check for null pointer
+    // add new node at the end
+    void add_element(string name) {
+        Node* new_node = new Node(name);
 
-        node->next_ptr = nullptr; // Set new node's next to nullptr
-
-        if (!head)
-        { // If list is empty
-            head = node;
-            tail = node;
-        }
-        else
-        {
-            tail->next_ptr = node; // Link current tail to new node
-            tail = node; // Update tail to new node
-            tail->next_ptr = head; //Cycling the linked list
+        if (head == nullptr) {
+            head = new_node;
+            tail = new_node;
+        } else {
+            tail->next_ptr = new_node;
+            tail = new_node;
         }
     }
 
-    void display_list()
-    {
-        Node *current = head;
-        if (!current)
-        {
-            cout << "List is empty" << endl;
-            return;
-        }
-        while (current != nullptr)
-        {
+    void display_list() {
+        Node* current = head;
+        while (current != nullptr) {
             cout << current->name << " -> ";
             current = current->next_ptr;
         }
-        cout << "nullptr" << endl;
+        cout << "NULL" << endl;
     }
 
-    void delete_by_value(string val)
-    {
-        if (!head)
-            return; // Empty list
+    void delete_by_value(string target_name) {
+        Node* current = head;
+        Node* prev = nullptr;
 
-        // Special case: deleting head
-        if (head->name == val)
-        {
-            Node *temp = head;
-            head = head->next_ptr;
-            delete temp;
-            if (!head)
-                tail = nullptr; // Update tail if list becomes empty
-            return;
-        }
-
-        Node *current = head;
-        while (current->next_ptr && current->next_ptr->name != val)
-        {
+        while (current != nullptr) {
+            if (current->name == target_name) {
+                if (current == head) {
+                    head = head->next_ptr;
+                    delete current;
+                } else {
+                    prev->next_ptr = current->next_ptr;
+                    if (current == tail) {
+                        tail = prev;
+                    }
+                    delete current;
+                }
+                cout << "Deleted: " << target_name << endl;
+                return;
+            }
+            prev = current;
             current = current->next_ptr;
         }
 
-        if (current->next_ptr)
-        { // If value found
-            Node *temp = current->next_ptr;
-            current->next_ptr = temp->next_ptr;
-            if (temp == tail)
-                tail = current; // Update tail if deleting last node
-            delete temp;
-        }
-    }
-
-    // Getter for head to allow memory cleanup in main
-    Node *get_head() const
-    {
-        return head;
+        cout << "Not found: " << target_name << endl;
     }
 };
 
-int main()
-{
-    // Create nodes dynamically
-    Node *node1 = new Node("Ali");
-    Node *node2 = new Node("Ahmed");
-    Node *node3 = new Node("Alice");
+int main() {
+    cout << "Singly Linked List" << endl;
+    LinkedList list;
 
-    // Create linked list and add nodes
-    LinkedList linkedlst(node1);
-    linkedlst.add_element(node2);
-    linkedlst.add_element(node3);
+    list.add_element("Ali");
+    list.add_element("Ahmed");
+    list.add_element("Alice");
 
-    // Display the list
-    linkedlst.display_list();
+    cout << "List: ";
+    list.display_list();
 
-    // Example of deletion
-    linkedlst.delete_by_value("Ahmed");
-    cout << "After deleting Ahmed: ";
-    linkedlst.display_list();
+    list.delete_by_value("Ahmed");
 
-    // Clean up memory
-    Node *current = linkedlst.get_head(); // Use getter instead of direct access
-    while (current)
-    {
-        Node *temp = current;
-        current = current->next_ptr;
-        delete temp;
-    }
+    cout << "After deleting 'Ahmed': ";
+    list.display_list();
+
+    return 0;
+}
 
     return 0;
 }
