@@ -1,77 +1,96 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
-struct Node {
+class DoubleNode {
+public:
     string name;
-    Node* next_pointer; // Pointer to the next Node
-    Node* prev_pointer; // Pointer to the previous Node
+    DoubleNode* next;
+    DoubleNode* prev;
 
-    // Constructor to initialize Node
-    Node(string n) : name(n), next_pointer(nullptr), prev_pointer(nullptr) {}
+    DoubleNode(string name) {
+        this->name = name;
+        this->next = nullptr;
+        this->prev = nullptr;
+    }
 };
 
-class Linkedlist {
-    Node* head; // Pointer to the head of the list
-    Node* tail; // Pointer to the tail of the list
+class DoublyLinkedList {
+private:
+    DoubleNode* head;
+    DoubleNode* tail;
 
 public:
-    Linkedlist() : head(nullptr), tail(nullptr) {} // Constructor to initialize head and tail
+    DoublyLinkedList() {
+        head = nullptr;
+        tail = nullptr;
+    }
 
-    void insert_node(Node* node) {
+    void add_element(string name) {
+        DoubleNode* new_node = new DoubleNode(name);
+
         if (head == nullptr) {
-            // First node
-            head = tail = node;
+            head = tail = new_node;
         } else {
-            // Append at the end
-            tail->next_pointer = node;
-            node->prev_pointer = tail;
-            tail = node;
+            tail->next = new_node;
+            new_node->prev = tail;
+            tail = new_node;
         }
     }
 
     void display_list() {
-        Node* currNode = head;
-        while (currNode != nullptr) {
-            cout << currNode->name << " ";
-            currNode = currNode->next_pointer;
+        DoubleNode* current = head;
+        while (current != nullptr) {
+            cout << current->name << " <-> ";
+            current = current->next;
         }
-        cout << endl;
+        cout << "NULL" << endl;
     }
 
-    void display_list_reverse() {
-        Node* currNode = tail;
-        while (currNode != nullptr) {
-            cout << currNode->name << " ";
-            currNode = currNode->prev_pointer;
+    void delete_by_value(string target_name) {
+        DoubleNode* current = head;
+
+        while (current != nullptr) {
+            if (current->name == target_name) {
+                if (current == head) {
+                    head = head->next;
+                    if (head != nullptr) head->prev = nullptr;
+                    else tail = nullptr; // list became empty
+                } else if (current == tail) {
+                    tail = tail->prev;
+                    if (tail != nullptr) tail->next = nullptr;
+                    else head = nullptr; // list became empty
+                } else {
+                    current->prev->next = current->next;
+                    current->next->prev = current->prev;
+                }
+
+                delete current;
+                cout << "Deleted: " << target_name << endl;
+                return;
+            }
+
+            current = current->next;
         }
-        cout << endl;
+
+        cout << "Not found: " << target_name << endl;
     }
 };
 
 int main() {
-    // Create nodes
-    Node* node1 = new Node("Ali");
-    Node* node2 = new Node("Alice");
-    Node* node3 = new Node("Ahmed");
+    DoublyLinkedList dlist;
 
-    Linkedlist std_names;
+    dlist.add_element("Ali");
+    dlist.add_element("Ahmed");
+    dlist.add_element("Alice");
 
-    std_names.insert_node(node1);
-    std_names.insert_node(node2);
-    std_names.insert_node(node3);
+    cout << "Doubly Linked List: ";
+    dlist.display_list();
 
-    cout << "Forward traversal: ";
-    std_names.display_list(); // Display the list forward
+    dlist.delete_by_value("Ahmed");
 
-    cout << "Reverse traversal: ";
-    std_names.display_list_reverse(); // Display the list backward
+    cout << "After deleting 'Ahmed': ";
+    dlist.display_list();
 
-    // Clean up memory (optional, but recommended)
-    delete node1;
-    delete node2;
-    delete node3;
-
-return 0;
+    return 0;
 }
