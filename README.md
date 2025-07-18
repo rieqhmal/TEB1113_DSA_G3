@@ -10,3 +10,4 @@
 | 20/06/2025 | 4   | - [Singly Circular](./L4/24003469_Rieqhmal_L4_Singly_Circular.cpp) <br> - [Doubly Circular](./L4/24003469_Rieqhmal_L4_Doubly_Circular.cpp)|
 | 26/06/2025 | 5   | - [Stack](./L5/24003469_Rieqhmal_L5_Stack.cpp)|
 | 04/07/2025 | 6   | - [Queue](./L6/24003469_Rieqhmal_L6_Queue.cpp) <br> - [Array Queue](./L6/24003469_Rieqhmal_L6_ArrayQueue.cpp) <br> - [Circular Queue](./L6/24003469_Rieqhmal_L6_CircularQueue.cpp) |
+| 11/07/2025 | 7   | - [Binary Tree](./L7/24003469_Rieqhmal_L7_BinaryTree.cpp)
