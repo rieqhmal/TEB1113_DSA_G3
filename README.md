@@ -12,4 +12,4 @@
 | 04/07/2025 | 6   | - [Queue](./L6/24003469_Rieqhmal_L6_Queue.cpp) <br> - [Array Queue](./L6/24003469_Rieqhmal_L6_ArrayQueue.cpp) <br> - [Circular Queue](./L6/24003469_Rieqhmal_L6_CircularQueue.cpp) |
 | 11/07/2025 | 7   | - [Binary Tree](./L7/24003469_Rieqhmal_L7_BinaryTree.cpp)
 | 18/07/2025 | 8   | - [Binary Search Tree](./L8/24003469_Rieqhmal_L8_BinarySearchTree.cpp)
-| 29/07/2025 | Project| - [Lab Project](./Array_vs_LinkedList_Insertion)
+| 29/07/2025 | Project| - [Array vs Linked List : Insertion](./Array_vs_LinkedList_Insertion)
