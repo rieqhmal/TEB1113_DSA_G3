@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Array vs Linked List Insertion</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-top: 40px; }
+    .container { display: flex; gap: 50px; flex-wrap: wrap; }
+    .structure { border: 1px solid #ccc; padding: 10px; min-width: 250px; }
+    .output { margin-top: 10px; min-height: 30px; background: #f9f9f9; padding: 5px; }
+    .item-box { display: inline-block; margin: 5px; padding: 5px 10px; background: #28a745; color: white; border-radius: 4px; }
+    button { margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Array vs Linked List - Insertion Visualizer</h1>
+
+  <div>
+    <label>Set Array Size: </label>
+    <input type="number" id="arraySize" placeholder="e.g. 5" min="1" />
+    <button onclick="setArraySize()">Confirm Size</button>
+  </div>
+  <br />
+
+  <div>
+    <input type="text" id="inputValue" placeholder="Enter value" />
+    <input type="number" id="insertIndex" placeholder="Index" min="0" style="width: 80px;" />
+    <button onclick="insertIntoArray()" disabled id="arrayInsertBtn">Insert (Array)</button>
+    <button onclick="insertIntoLinkedList()" id="linkedListInsertBtn">Insert (Linked List)</button>
+  </div>
+
+  <div class="container">
+    <div class="structure">
+      <h2>Array</h2>
+      <div id="arrayOutput" class="output"></div>
+      <div id="arrayInfo" class="output"></div>
+    </div>
+    <div class="structure">
+      <h2>Linked List</h2>
+      <div id="linkedListOutput" class="output"></div>
+      <div id="linkedListInfo" class="output"></div>
+    </div>
+  </div>
+
+  <script>
+    let array = [];
+    let maxArraySize = null;
+
+    class ListNode {
+      constructor(value) {
+        this.value = value;
+        this.next = null;
+      }
+    }
+
+    class LinkedList {
+      constructor() {
+        this.head = null;
+      }
+
+      insertAt(index, value) {
+        const newNode = new ListNode(value);
+        let description = "";
+        if (index === 0) {
+          newNode.next = this.head;
+          this.head = newNode;
+          description = `→ New node(${value}) → ${newNode.next ? newNode.next.value : 'NULL'}<br>→ Result: ${this.toArrowString()} → ${this.head ? 'NULL' : 'EMPTY'}`;
+        } else {
+          let current = this.head;
+          let prev = null;
+          let i = 0;
+          while (current !== null && i < index) {
+            prev = current;
+            current = current.next;
+            i++;
+          }
+          if (prev !== null) {
+            prev.next = newNode;
+            newNode.next = current;
+            description = `→ New node(${value}) → ${current ? current.value : 'NULL'}<br>→ Result: ${this.toArrowString()} → ${this.getTailState()}`;
+          }
+        }
+        document.getElementById("linkedListInfo").innerHTML = description;
+      }
+
+      getTailState() {
+        let current = this.head;
+        if (!current) return "EMPTY";
+        while (current.next !== null) {
+          current = current.next;
+        }
+        return "NULL";
+      }
+
+      toArray() {
+        let result = [];
+        let current = this.head;
+        while (current !== null) {
+          result.push(current.value);
+          current = current.next;
+        }
+        return result;
+      }
+
+      toArrowString() {
+        let result = "";
+        let current = this.head;
+        while (current !== null) {
+          result += current.value;
+          if (current.next) result += " → ";
+          current = current.next;
+        }
+        return result;
+      }
+    }
+
+    const linkedList = new LinkedList();
+
+    function setArraySize() {
+      const sizeInput = document.getElementById("arraySize").value;
+      const size = parseInt(sizeInput);
+      if (!isNaN(size) && size > 0) {
+        maxArraySize = size;
+        alert(`Array size is set to ${maxArraySize}`);
+        document.getElementById("arrayInsertBtn").disabled = false;
+      } else {
+        alert("Please enter a valid array size (positive number)");
+      }
+    }
+
+    function updateDisplays() {
+      const arrayDiv = document.getElementById("arrayOutput");
+      const linkedListDiv = document.getElementById("linkedListOutput");
+
+      arrayDiv.innerHTML = array.map(item => `<span class='item-box'>${item}</span>`).join('');
+      linkedListDiv.innerHTML = linkedList.toArray().map(item => `<span class='item-box'>${item}</span>`).join('');
+    }
+
+    function insertIntoArray() {
+      if (maxArraySize === null) {
+        alert("Please set the array size first.");
+        return;
+      }
+      const value = document.getElementById("inputValue").value;
+      const index = parseInt(document.getElementById("insertIndex").value);
+      if (value && !isNaN(index) && index >= 0 && index <= array.length) {
+        if (array.length < maxArraySize) {
+          let shiftedItems = array.slice(index).join(", ");
+          array.splice(index, 0, value);
+          updateDisplays();
+          const arrayInfoDiv = document.getElementById("arrayInfo");
+          arrayInfoDiv.innerHTML = `→ Shift ${shiftedItems || 'none'} right<br>→ Result: [${array.join(", ")}]`;
+        } else {
+          alert("Array has reached its maximum size.");
+        }
+        document.getElementById("inputValue").value = "";
+        document.getElementById("insertIndex").value = "";
+      }
+    }
+
+    function insertIntoLinkedList() {
+      const value = document.getElementById("inputValue").value;
+      const index = parseInt(document.getElementById("insertIndex").value);
+      if (value && !isNaN(index) && index >= 0) {
+        linkedList.insertAt(index, value);
+        updateDisplays();
+        document.getElementById("inputValue").value = "";
+        document.getElementById("insertIndex").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
